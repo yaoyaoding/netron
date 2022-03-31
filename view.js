@@ -1,4 +1,3 @@
-
 var view = view || {};
 
 var base = base || require('./base');
@@ -78,20 +77,22 @@ view.View = class {
         }
         this._host.document.body.setAttribute('class', page);
         switch (page) {
-            case 'default': {
-                const container = this._getElementById('graph');
-                if (container) {
-                    container.focus();
+            case 'default':
+                {
+                    const container = this._getElementById('graph');
+                    if (container) {
+                        container.focus();
+                    }
+                    break;
                 }
-                break;
-            }
-            case 'welcome': {
-                const element = this._getElementById('open-file-button');
-                if (element) {
-                    element.focus();
+            case 'welcome':
+                {
+                    const element = this._getElementById('open-file-button');
+                    if (element) {
+                        element.focus();
+                    }
+                    break;
                 }
-                break;
-            }
         }
         this._page = page;
     }
@@ -270,8 +271,8 @@ view.View = class {
         const touchMoveHandler = (e) => {
             if (Array.isArray(this._touchPoints) && this._touchPoints.length === 2 && e.touches.length === 2) {
                 const distance = (points) => {
-                    const dx =(points[1].clientX - points[0].clientX);
-                    const dy =(points[1].clientY - points[0].clientY);
+                    const dx = (points[1].clientX - points[0].clientX);
+                    const dy = (points[1].clientY - points[0].clientY);
                     return Math.sqrt(dx * dx + dy * dy);
                 };
                 const d1 = distance(Array.from(e.touches));
@@ -431,7 +432,7 @@ view.View = class {
                     this._host.event('Model', 'Format', format.join(' '));
                 }
                 return this._timeout(20).then(() => {
-                    const graphs = Array.isArray(model.graphs) && model.graphs.length > 0 ? [ model.graphs[0] ] : [];
+                    const graphs = Array.isArray(model.graphs) && model.graphs.length > 0 ? [model.graphs[0]] : [];
                     return this._updateGraph(model, graphs);
                 });
             });
@@ -444,7 +445,7 @@ view.View = class {
             const model = this._model;
             this.show('welcome spinner');
             this._timeout(200).then(() => {
-                return this._updateGraph(model, [ graph ]).catch((error) => {
+                return this._updateGraph(model, [graph]).catch((error) => {
                     if (error) {
                         this.error(error, 'Graph update failed.', 'welcome');
                     }
@@ -482,8 +483,7 @@ view.View = class {
                     nameButton.innerHTML = graph ? graph.name : '';
                     backButton.style.opacity = 1;
                     nameButton.style.opacity = 1;
-                }
-                else {
+                } else {
                     backButton.style.opacity = 0;
                     nameButton.style.opacity = 0;
                 }
@@ -511,7 +511,7 @@ view.View = class {
     pushGraph(graph) {
         if (graph !== this.activeGraph) {
             this._sidebar.close();
-            this._updateGraph(this._model, [ graph ].concat(this._graphs));
+            this._updateGraph(this._model, [graph].concat(this._graphs));
         }
     }
 
@@ -532,8 +532,7 @@ view.View = class {
             }
             if (!graph) {
                 return Promise.resolve();
-            }
-            else {
+            } else {
                 this._zoom = 1;
 
                 const groups = graph.groups;
@@ -621,8 +620,7 @@ view.View = class {
                         const left = (container.scrollLeft + x - graphRect.left) - (graphRect.width / 2);
                         const top = (container.scrollTop + y - graphRect.top) - (graphRect.height / 2);
                         container.scrollTo({ left: left, top: top, behavior: 'auto' });
-                    }
-                    else {
+                    } else {
                         const canvasRect = canvas.getBoundingClientRect();
                         const graphRect = container.getBoundingClientRect();
                         const left = (container.scrollLeft + (canvasRect.width / 2) - graphRect.left) - (graphRect.width / 2);
@@ -633,8 +631,7 @@ view.View = class {
                     return;
                 });
             }
-        }
-        catch (error) {
+        } catch (error) {
             return Promise.reject(error);
         }
     }
@@ -659,7 +656,7 @@ view.View = class {
         }
     }
 
-    export(file) {
+    export (file) {
         const lastIndex = file.lastIndexOf('.');
         const extension = (lastIndex != -1) ? file.substring(lastIndex + 1) : '';
         if (this.activeGraph && (extension === 'png' || extension === 'svg')) {
@@ -697,7 +694,7 @@ view.View = class {
             const data = new XMLSerializer().serializeToString(clone);
 
             if (extension === 'svg') {
-                const blob = new Blob([ data ], { type: 'image/svg' });
+                const blob = new Blob([data], { type: 'image/svg' });
                 this._host.export(file, blob);
             }
 
@@ -715,8 +712,7 @@ view.View = class {
                     canvas.toBlob((blob) => {
                         if (blob) {
                             this._host.export(file, blob);
-                        }
-                        else {
+                        } else {
                             const err = new Error();
                             err.name = 'Error exporting image.';
                             err.message = 'Image may be too large to render as PNG.';
@@ -739,8 +735,7 @@ view.View = class {
                 });
                 const content = modelSidebar.render();
                 this._sidebar.open(content, 'Model Properties');
-            }
-            catch (error) {
+            } catch (error) {
                 const content = " in '" + this._model.identifier + "'.";
                 if (error && !error.message.endsWith(content) && (error.context === undefined || error.context === true)) {
                     error.message = error.message.replace(/\.$/, '') + content;
@@ -754,7 +749,7 @@ view.View = class {
         if (node) {
             try {
                 const nodeSidebar = new sidebar.NodeSidebar(this._host, node);
-                nodeSidebar.on('show-documentation', (/* sender, e */) => {
+                nodeSidebar.on('show-documentation', ( /* sender, e */ ) => {
                     this.showDocumentation(node.type);
                 });
                 nodeSidebar.on('show-graph', (sender, graph) => {
@@ -766,18 +761,19 @@ view.View = class {
                         try {
                             let data_type = tensor.type.dataType;
                             switch (data_type) {
-                                case 'boolean': data_type = 'bool'; break;
+                                case 'boolean':
+                                    data_type = 'bool';
+                                    break;
                             }
                             const execution = new python.Execution(null);
                             const bytes = execution.invoke('io.BytesIO', []);
-                            const dtype = execution.invoke('numpy.dtype', [ data_type ]);
-                            const array = execution.invoke('numpy.asarray', [ tensor.value, dtype ]);
-                            execution.invoke('numpy.save', [ bytes, array ]);
+                            const dtype = execution.invoke('numpy.dtype', [data_type]);
+                            const array = execution.invoke('numpy.asarray', [tensor.value, dtype]);
+                            execution.invoke('numpy.save', [bytes, array]);
                             bytes.seek(0);
-                            const blob = new Blob([ bytes.read() ], { type: 'application/octet-stream' });
+                            const blob = new Blob([bytes.read()], { type: 'application/octet-stream' });
                             this._host.export(file, blob);
-                        }
-                        catch (error) {
+                        } catch (error) {
                             this.error(error, 'Error saving NumPy tensor.', null);
                         }
                     });
@@ -792,8 +788,7 @@ view.View = class {
                     nodeSidebar.toggleInput(input.name);
                 }
                 this._sidebar.open(nodeSidebar.render(), 'Node Properties');
-            }
-            catch (error) {
+            } catch (error) {
                 const content = " in '" + this._model.identifier + "'.";
                 if (error && !error.message.endsWith(content) && (error.context === undefined || error.context === true)) {
                     error.message = error.message.replace(/\.$/, '') + content;
@@ -925,7 +920,7 @@ view.Graph = class extends grapher.Graph {
 
             const createCluster = (name) => {
                 if (!clusters.has(name)) {
-                    this.setNode({ name: name, rx: 5, ry: 5});
+                    this.setNode({ name: name, rx: 5, ry: 5 });
                     clusters.add(name);
                     const parent = clusterParentMap.get(name);
                     if (parent) {
@@ -945,8 +940,7 @@ view.Graph = class extends grapher.Graph {
                             if (!clusterParentMap.has(groupName)) {
                                 groupName = null;
                             }
-                        }
-                        else {
+                        } else {
                             groupName = null;
                         }
                     }
@@ -998,8 +992,8 @@ view.Node = class extends grapher.Node {
     }
 
     _add(node) {
-        const header =  this.header();
-        const styles = [ 'node-item-type' ];
+        const header = this.header();
+        const styles = ['node-item-type'];
         const type = node.type;
         const category = type && type.category ? type.category : '';
         if (category) {
@@ -1061,13 +1055,11 @@ view.Node = class extends grapher.Node {
                                 shape = shape.substring(0, 10) + '\u2026';
                             }
                             separator = ' = ';
-                        }
-                        catch (err) {
+                        } catch (err) {
                             let type = '?';
                             try {
                                 type = argument.initializer.type.toString();
-                            }
-                            catch (error) {
+                            } catch (error) {
                                 // continue regardless of error
                             }
                             const identifier = this.context.view.model && this.context.view.model.identifier ? this.context.view.model.identifier : '?';
@@ -1075,7 +1067,7 @@ view.Node = class extends grapher.Node {
                         }
                     }
                 }
-                list.add(argument.name ? 'initializer-' + argument.name : '', initializer.name, shape, type ? type.toString() : '', separator);
+                list.add(argument.name ? 'initializer-' + argument.name : '', initializer.name, shape, type ? (type.string ? type.string : type.toString()) : '', separator);
             }
             if (hiddenInitializers) {
                 list.add(null, '\u3008' + '\u2026' + '\u3009', '', null, '');
@@ -1126,13 +1118,13 @@ view.Input = class extends grapher.Node {
         this.context = context;
         this.value = value;
         view.Input.counter = view.Input.counter || 0;
-        const types = value.arguments.map((argument) => argument.type || '').join('\n');
+        const types = value.arguments.map((argument) => (argument.type.string ? argument.type.string : argument.type) || '').join('\n');
         let name = value.name || '';
         if (name.length > 16) {
             name = name.split('/').pop();
         }
         const header = this.header();
-        const title = header.add(null, [ 'graph-item-input' ], name, types);
+        const title = header.add(null, ['graph-item-input'], name, types);
         title.on('click', () => this.context.view.showModelProperties());
         this.id = 'input-' + (name ? 'name-' + name : 'id-' + (view.Input.counter++).toString());
     }
@@ -1146,7 +1138,7 @@ view.Input = class extends grapher.Node {
     }
 
     get outputs() {
-        return [ this.value ];
+        return [this.value];
     }
 };
 
@@ -1162,12 +1154,12 @@ view.Output = class extends grapher.Node {
             name = name.split('/').pop();
         }
         const header = this.header();
-        const title = header.add(null, [ 'graph-item-output' ], name, types);
+        const title = header.add(null, ['graph-item-output'], name, types);
         title.on('click', () => this.context.view.showModelProperties());
     }
 
     get inputs() {
-        return [ this.value ];
+        return [this.value];
     }
 
     get outputs() {
@@ -1284,8 +1276,8 @@ view.ModelContext = class {
             const stream = this.stream;
             const position = stream.position;
             const signatures = [
-                [ 0x89, 0x48, 0x44, 0x46, 0x0D, 0x0A, 0x1A, 0x0A ], // HDF5
-                [ 0x80, undefined, 0x8a, 0x0a, 0x6c, 0xfc, 0x9c, 0x46, 0xf9, 0x20, 0x6a, 0xa8, 0x50, 0x19 ] // PyTorch
+                [0x89, 0x48, 0x44, 0x46, 0x0D, 0x0A, 0x1A, 0x0A], // HDF5
+                [0x80, undefined, 0x8a, 0x0a, 0x6c, 0xfc, 0x9c, 0x46, 0xf9, 0x20, 0x6a, 0xa8, 0x50, 0x19] // PyTorch
             ];
             const skip =
                 signatures.some((signature) => signature.length <= stream.length && stream.peek(signature.length).every((value, index) => signature[index] === undefined || signature[index] === value)) ||
@@ -1293,73 +1285,73 @@ view.ModelContext = class {
                 Array.from(this._content.values()).some((obj) => obj !== undefined);
             if (!skip) {
                 switch (type) {
-                    case 'json': {
-                        try {
-                            const reader = json.TextReader.open(this.stream);
-                            if (reader) {
-                                const obj = reader.read();
-                                this._content.set(type, obj);
-                            }
-                        }
-                        catch (err) {
-                            // continue regardless of error
-                        }
-                        break;
-                    }
-                    case 'json.gz': {
-                        try {
-                            const archive = gzip.Archive.open(this.stream);
-                            if (archive) {
-                                const entries = archive.entries;
-                                if (entries.size === 1) {
-                                    const stream = entries.values().next().value;
-                                    const reader = json.TextReader.open(stream);
-                                    if (reader) {
-                                        const obj = reader.read();
-                                        this._content.set(type, obj);
-                                    }
+                    case 'json':
+                        {
+                            try {
+                                const reader = json.TextReader.open(this.stream);
+                                if (reader) {
+                                    const obj = reader.read();
+                                    this._content.set(type, obj);
                                 }
+                            } catch (err) {
+                                // continue regardless of error
                             }
+                            break;
                         }
-                        catch (err) {
-                            // continue regardless of error
-                        }
-                        break;
-                    }
-                    case 'pkl': {
-                        let unpickler = null;
-                        try {
-                            if (stream.length > 2) {
-                                const zlib = (stream) => {
-                                    const buffer = stream.peek(2);
-                                    if (buffer[0] === 0x78) {
-                                        const check = (buffer[0] << 8) + buffer[1];
-                                        if (check % 31 === 0) {
-                                            const archive = zip.Archive.open(stream);
-                                            return archive.entries.get('');
+                    case 'json.gz':
+                        {
+                            try {
+                                const archive = gzip.Archive.open(this.stream);
+                                if (archive) {
+                                    const entries = archive.entries;
+                                    if (entries.size === 1) {
+                                        const stream = entries.values().next().value;
+                                        const reader = json.TextReader.open(stream);
+                                        if (reader) {
+                                            const obj = reader.read();
+                                            this._content.set(type, obj);
                                         }
                                     }
-                                    return stream;
-                                };
-                                unpickler = python.Unpickler.open(zlib(stream));
+                                }
+                            } catch (err) {
+                                // continue regardless of error
                             }
+                            break;
                         }
-                        catch (err) {
-                            // continue regardless of error
+                    case 'pkl':
+                        {
+                            let unpickler = null;
+                            try {
+                                if (stream.length > 2) {
+                                    const zlib = (stream) => {
+                                        const buffer = stream.peek(2);
+                                        if (buffer[0] === 0x78) {
+                                            const check = (buffer[0] << 8) + buffer[1];
+                                            if (check % 31 === 0) {
+                                                const archive = zip.Archive.open(stream);
+                                                return archive.entries.get('');
+                                            }
+                                        }
+                                        return stream;
+                                    };
+                                    unpickler = python.Unpickler.open(zlib(stream));
+                                }
+                            } catch (err) {
+                                // continue regardless of error
+                            }
+                            if (unpickler) {
+                                const execution = new python.Execution(null, (error, fatal) => {
+                                    const message = error && error.message ? error.message : error.toString();
+                                    this.exception(new view.Error(message.replace(/\.$/, '') + " in '" + this.identifier + "'."), fatal);
+                                });
+                                const persistent_load = (saved_id) => {
+                                    return saved_id;
+                                };
+                                const obj = unpickler.load((name, args) => execution.invoke(name, args), persistent_load);
+                                this._content.set(type, obj);
+                            }
+                            break;
                         }
-                        if (unpickler) {
-                            const execution = new python.Execution(null, (error, fatal) => {
-                                const message = error && error.message ? error.message : error.toString();
-                                this.exception(new view.Error(message.replace(/\.$/, '') + " in '" + this.identifier + "'."), fatal);
-                            });
-                            const persistent_load = (saved_id) => {
-                                return saved_id;
-                            };
-                            const obj = unpickler.load((name, args) => execution.invoke(name, args), persistent_load);
-                            this._content.set(type, obj);
-                        }
-                        break;
-                    }
                 }
             }
             if (stream.position !== position) {
@@ -1376,10 +1368,10 @@ view.ModelContext = class {
             const position = stream.position;
             if (stream) {
                 const signatures = [
-                    [ 0x89, 0x48, 0x44, 0x46, 0x0D, 0x0A, 0x1A, 0x0A ], // HDF5
-                    [ 0x80, undefined, 0x8a, 0x0a, 0x6c, 0xfc, 0x9c, 0x46, 0xf9, 0x20, 0x6a, 0xa8, 0x50, 0x19 ], // PyTorch
-                    [ 0x50, 0x4b ], // Zip
-                    [ 0x1f, 0x8b ] // Gzip
+                    [0x89, 0x48, 0x44, 0x46, 0x0D, 0x0A, 0x1A, 0x0A], // HDF5
+                    [0x80, undefined, 0x8a, 0x0a, 0x6c, 0xfc, 0x9c, 0x46, 0xf9, 0x20, 0x6a, 0xa8, 0x50, 0x19], // PyTorch
+                    [0x50, 0x4b], // Zip
+                    [0x1f, 0x8b] // Gzip
                 ];
                 const skip =
                     signatures.some((signature) => signature.length <= stream.length && stream.peek(signature.length).every((value, index) => signature[index] === undefined || signature[index] === value)) ||
@@ -1388,47 +1380,51 @@ view.ModelContext = class {
                 if (!skip) {
                     try {
                         switch (type) {
-                            case 'pbtxt': {
-                                const reader = protobuf.TextReader.open(stream);
-                                tags = reader ? reader.signature() : tags;
-                                break;
-                            }
-                            case 'pb': {
-                                const reader = protobuf.BinaryReader.open(stream);
-                                tags = reader.signature();
-                                break;
-                            }
-                            case 'pb+': {
-                                const reader = protobuf.BinaryReader.open(stream);
-                                tags = reader.decode();
-                                break;
-                            }
-                            case 'flatbuffers': {
-                                if (stream.length >= 8) {
-                                    const buffer = stream.peek(Math.min(32, stream.length));
-                                    const reader = flatbuffers.BinaryReader.open(buffer);
-                                    const identifier = reader.identifier;
-                                    if (identifier.length > 0) {
-                                        tags.set('file_identifier', identifier);
+                            case 'pbtxt':
+                                {
+                                    const reader = protobuf.TextReader.open(stream);
+                                    tags = reader ? reader.signature() : tags;
+                                    break;
+                                }
+                            case 'pb':
+                                {
+                                    const reader = protobuf.BinaryReader.open(stream);
+                                    tags = reader.signature();
+                                    break;
+                                }
+                            case 'pb+':
+                                {
+                                    const reader = protobuf.BinaryReader.open(stream);
+                                    tags = reader.decode();
+                                    break;
+                                }
+                            case 'flatbuffers':
+                                {
+                                    if (stream.length >= 8) {
+                                        const buffer = stream.peek(Math.min(32, stream.length));
+                                        const reader = flatbuffers.BinaryReader.open(buffer);
+                                        const identifier = reader.identifier;
+                                        if (identifier.length > 0) {
+                                            tags.set('file_identifier', identifier);
+                                        }
                                     }
+                                    break;
                                 }
-                                break;
-                            }
-                            case 'xml': {
-                                const reader = xml.TextReader.open(stream);
-                                if (reader) {
-                                    const document = reader.peek();
-                                    const element = document.documentElement;
-                                    const namespaceURI = element.namespaceURI;
-                                    const localName = element.localName;
-                                    const name = namespaceURI ? namespaceURI + ':' + localName : localName;
-                                    tags.set(name, element);
+                            case 'xml':
+                                {
+                                    const reader = xml.TextReader.open(stream);
+                                    if (reader) {
+                                        const document = reader.peek();
+                                        const element = document.documentElement;
+                                        const namespaceURI = element.namespaceURI;
+                                        const localName = element.localName;
+                                        const name = namespaceURI ? namespaceURI + ':' + localName : localName;
+                                        tags.set(name, element);
+                                    }
+                                    break;
                                 }
-                                break;
-                            }
                         }
-                    }
-                    catch (error) {
+                    } catch (error) {
                         tags.clear();
                     }
                 }
@@ -1506,50 +1502,51 @@ view.ModelFactoryService = class {
     constructor(host) {
         this._host = host;
         this._extensions = [];
-        this.register('./pytorch', [ '.pt', '.pth', '.ptl', '.pt1', '.pyt', '.pyth', '.pkl', '.pickle', '.h5', '.t7', '.model', '.dms', '.tar', '.ckpt', '.chkpt', '.tckpt', '.bin', '.pb', '.zip', '.nn', '.torchmodel', '.torchscript', '.pytorch', '.ot', '.params' ]);
-        this.register('./onnx', [ '.onnx', '.onn', '.pb', '.onnxtxt', '.pbtxt', '.prototxt', '.txt', '.model', '.pt', '.pth', '.pkl', '.ort', '.ort.onnx' ]);
-        this.register('./mxnet', [ '.json', '.params' ]);
-        this.register('./coreml', [ '.mlmodel', '.bin', 'manifest.json', 'metadata.json', 'featuredescriptions.json', '.pb' ]);
-        this.register('./caffe', [ '.caffemodel', '.pbtxt', '.prototxt', '.pt', '.txt' ]);
-        this.register('./caffe2', [ '.pb', '.pbtxt', '.prototxt' ]);
-        this.register('./torch', [ '.t7', '.net' ]);
-        this.register('./tflite', [ '.tflite', '.lite', '.tfl', '.bin', '.pb', '.tmfile', '.h5', '.model', '.json', '.txt' ]);
-        this.register('./circle', [ '.circle' ]);
-        this.register('./tf', [ '.pb', '.meta', '.pbtxt', '.prototxt', '.pt', '.json', '.index', '.ckpt', '.graphdef', '.pbmm', /.data-[0-9][0-9][0-9][0-9][0-9]-of-[0-9][0-9][0-9][0-9][0-9]$/, /^events.out.tfevents./ ]);
-        this.register('./mediapipe', [ '.pbtxt' ]);
-        this.register('./uff', [ '.uff', '.pb', '.pbtxt', '.uff.txt', '.trt', '.engine' ]);
-        this.register('./tensorrt', [ '.trt', '.engine', '.model', '.txt', '.uff', '.pb', '.tmfile', '.onnx', '.pth', '.dnn', '.plan' ]);
-        this.register('./numpy', [ '.npz', '.npy', '.pkl', '.pickle' ]);
-        this.register('./lasagne', [ '.pkl', '.pickle', '.joblib', '.model', '.pkl.z', '.joblib.z' ]);
-        this.register('./lightgbm', [ '.txt', '.pkl', '.model' ]);
-        this.register('./keras', [ '.h5', '.hd5', '.hdf5', '.keras', '.json', '.cfg', '.model', '.pb', '.pth', '.weights', '.pkl', '.lite', '.tflite', '.ckpt' ]);
-        this.register('./sklearn', [ '.pkl', '.pickle', '.joblib', '.model', '.meta', '.pb', '.pt', '.h5', '.pkl.z', '.joblib.z' ]);
-        this.register('./pickle', [ '.pkl', '.pickle', '.joblib', '.model', '.meta', '.pb', '.pt', '.h5', '.pkl.z', '.joblib.z' ]);
-        this.register('./cntk', [ '.model', '.cntk', '.cmf', '.dnn' ]);
-        this.register('./paddle', [ '.pdmodel', '.pdparams', '.pdiparams', '.paddle', '__model__', '.__model__', '.pbtxt', '.txt', '.tar', '.tar.gz', '.nb' ]);
-        this.register('./bigdl', [ '.model', '.bigdl' ]);
-        this.register('./darknet', [ '.cfg', '.model', '.txt', '.weights' ]);
-        this.register('./weka', [ '.model' ]);
-        this.register('./rknn', [ '.rknn', '.onnx' ]);
-        this.register('./dlc', [ '.dlc' ]);
-        this.register('./armnn', [ '.armnn', '.json' ]);
+        this.register('./pytorch', ['.pt', '.pth', '.ptl', '.pt1', '.pyt', '.pyth', '.pkl', '.pickle', '.h5', '.t7', '.model', '.dms', '.tar', '.ckpt', '.chkpt', '.tckpt', '.bin', '.pb', '.zip', '.nn', '.torchmodel', '.torchscript', '.pytorch', '.ot', '.params']);
+        this.register('./onnx', ['.onnx', '.onn', '.pb', '.onnxtxt', '.pbtxt', '.prototxt', '.txt', '.model', '.pt', '.pth', '.pkl', '.ort', '.ort.onnx']);
+        this.register('./mxnet', ['.json', '.params']);
+        this.register('./coreml', ['.mlmodel', '.bin', 'manifest.json', 'metadata.json', 'featuredescriptions.json', '.pb']);
+        this.register('./caffe', ['.caffemodel', '.pbtxt', '.prototxt', '.pt', '.txt']);
+        this.register('./caffe2', ['.pb', '.pbtxt', '.prototxt']);
+        this.register('./torch', ['.t7', '.net']);
+        this.register('./tflite', ['.tflite', '.lite', '.tfl', '.bin', '.pb', '.tmfile', '.h5', '.model', '.json', '.txt']);
+        this.register('./circle', ['.circle']);
+        this.register('./tf', ['.pb', '.meta', '.pbtxt', '.prototxt', '.pt', '.json', '.index', '.ckpt', '.graphdef', '.pbmm', /.data-[0-9][0-9][0-9][0-9][0-9]-of-[0-9][0-9][0-9][0-9][0-9]$/, /^events.out.tfevents./]);
+        this.register('./mediapipe', ['.pbtxt']);
+        this.register('./uff', ['.uff', '.pb', '.pbtxt', '.uff.txt', '.trt', '.engine']);
+        this.register('./tensorrt', ['.trt', '.engine', '.model', '.txt', '.uff', '.pb', '.tmfile', '.onnx', '.pth', '.dnn', '.plan']);
+        this.register('./numpy', ['.npz', '.npy', '.pkl', '.pickle']);
+        this.register('./lasagne', ['.pkl', '.pickle', '.joblib', '.model', '.pkl.z', '.joblib.z']);
+        this.register('./lightgbm', ['.txt', '.pkl', '.model']);
+        this.register('./keras', ['.h5', '.hd5', '.hdf5', '.keras', '.json', '.cfg', '.model', '.pb', '.pth', '.weights', '.pkl', '.lite', '.tflite', '.ckpt']);
+        this.register('./sklearn', ['.pkl', '.pickle', '.joblib', '.model', '.meta', '.pb', '.pt', '.h5', '.pkl.z', '.joblib.z']);
+        this.register('./pickle', ['.pkl', '.pickle', '.joblib', '.model', '.meta', '.pb', '.pt', '.h5', '.pkl.z', '.joblib.z']);
+        this.register('./cntk', ['.model', '.cntk', '.cmf', '.dnn']);
+        this.register('./paddle', ['.pdmodel', '.pdparams', '.pdiparams', '.paddle', '__model__', '.__model__', '.pbtxt', '.txt', '.tar', '.tar.gz', '.nb']);
+        this.register('./bigdl', ['.model', '.bigdl']);
+        this.register('./darknet', ['.cfg', '.model', '.txt', '.weights']);
+        this.register('./weka', ['.model']);
+        this.register('./rknn', ['.rknn', '.onnx']);
+        this.register('./dlc', ['.dlc']);
+        this.register('./armnn', ['.armnn', '.json']);
         this.register('./mnn', ['.mnn']);
-        this.register('./ncnn', [ '.param', '.bin', '.cfg.ncnn', '.weights.ncnn', '.ncnnmodel' ]);
-        this.register('./tnn', [ '.tnnproto', '.tnnmodel' ]);
+        this.register('./ncnn', ['.param', '.bin', '.cfg.ncnn', '.weights.ncnn', '.ncnnmodel']);
+        this.register('./tnn', ['.tnnproto', '.tnnmodel']);
         this.register('./tengine', ['.tmfile']);
-        this.register('./mslite', [ '.ms']);
-        this.register('./barracuda', [ '.nn' ]);
-        this.register('./dnn', [ '.dnn' ]);
-        this.register('./xmodel', [ '.xmodel' ]);
-        this.register('./kmodel', [ '.kmodel' ]);
-        this.register('./flux', [ '.bson' ]);
-        this.register('./dl4j', [ '.json', '.bin' ]);
-        this.register('./openvino', [ '.xml', '.bin' ]);
-        this.register('./mlnet', [ '.zip' ]);
-        this.register('./acuity', [ '.json' ]);
-        this.register('./imgdnn', [ '.dnn', 'params', '.json' ]);
-        this.register('./flax', [ '.msgpack' ]);
-        this.register('./om', [ '.om', '.onnx', '.pb', '.engine' ]);
+        this.register('./mslite', ['.ms']);
+        this.register('./barracuda', ['.nn']);
+        this.register('./dnn', ['.dnn']);
+        this.register('./xmodel', ['.xmodel']);
+        this.register('./kmodel', ['.kmodel']);
+        this.register('./flux', ['.bson']);
+        this.register('./dl4j', ['.json', '.bin']);
+        this.register('./openvino', ['.xml', '.bin']);
+        this.register('./mlnet', ['.zip']);
+        this.register('./acuity', ['.json']);
+        this.register('./imgdnn', ['.dnn', 'params', '.json']);
+        this.register('./flax', ['.msgpack']);
+        this.register('./om', ['.om', '.onnx', '.pb', '.engine']);
+        this.register('./hidet', ['.json'])
     }
 
     register(id, extensions) {
@@ -1565,8 +1562,7 @@ view.ModelFactoryService = class {
             const entries = context.entries;
             if (!stream && entries && entries.size > 0) {
                 containers.set('', entries);
-            }
-            else {
+            } else {
                 const identifier = context.identifier;
                 try {
                     const archive = gzip.Archive.open(stream);
@@ -1577,13 +1573,15 @@ view.ModelFactoryService = class {
                             stream = entries.values().next().value;
                         }
                     }
-                }
-                catch (error) {
+                } catch (error) {
                     const message = error && error.message ? error.message : error.toString();
                     throw new view.ArchiveError(message.replace(/\.$/, '') + " in '" + identifier + "'.");
                 }
                 try {
-                    const formats = new Map([ [ 'zip', zip ], [ 'tar', tar ] ]);
+                    const formats = new Map([
+                        ['zip', zip],
+                        ['tar', tar]
+                    ]);
                     for (const pair of formats) {
                         const format = pair[0];
                         const module = pair[1];
@@ -1594,8 +1592,7 @@ view.ModelFactoryService = class {
                             break;
                         }
                     }
-                }
-                catch (error) {
+                } catch (error) {
                     const message = error && error.message ? error.message : error.toString();
                     throw new view.ArchiveError(message.replace(/\.$/, '') + " in '" + identifier + "'.");
                 }
@@ -1623,12 +1620,11 @@ view.ModelFactoryService = class {
         const identifier = context.identifier;
         const extension = identifier.split('.').pop().toLowerCase();
         const stream = context.stream;
-        for (const module of [ zip, tar, gzip ]) {
+        for (const module of[zip, tar, gzip]) {
             let archive = null;
             try {
                 archive = module.Archive.open(stream);
-            }
-            catch (error) {
+            } catch (error) {
                 // continue regardless of error
             }
             if (archive) {
@@ -1653,21 +1649,21 @@ view.ModelFactoryService = class {
             const obj = context.open('json');
             if (obj) {
                 const formats = [
-                    { name: 'Netron metadata', tags: [ '[].name', '[].schema' ] },
-                    { name: 'Netron metadata', tags: [ '[].name', '[].attributes' ] },
-                    { name: 'Netron metadata', tags: [ '[].name', '[].category' ] },
-                    { name: 'Darkflow metadata', tags: [ 'net', 'type', 'model' ] },
-                    { name: 'keras-yolo2 configuration', tags: [ 'model', 'train', 'valid' ] },
-                    { name: 'Vulkan SwiftShader ICD manifest', tags: [ 'file_format_version', 'ICD' ] },
-                    { name: 'DeepLearningExamples configuration', tags: [ 'attention_probs_dropout_prob', 'hidden_act', 'hidden_dropout_prob', 'hidden_size', ] },
-                    { name: 'NuGet assets', tags: [ 'version', 'targets', 'packageFolders' ] },
-                    { name: 'NuGet data', tags: [ 'format', 'restore', 'projects' ] },
-                    { name: 'NPM package', tags: [ 'name', 'version', 'dependencies' ] },
-                    { name: 'NetworkX adjacency_data', tags: [ 'directed', 'graph', 'nodes' ] },
-                    { name: 'Waifu2x data', tags: [ 'name', 'arch_name', 'channels' ] },
-                    { name: 'Waifu2x data', tags: [ '[].nInputPlane', '[].nOutputPlane', '[].weight', '[].bias' ] },
-                    { name: 'Brain.js data', tags: [ 'type', 'sizes', 'layers' ] },
-                    { name: 'Custom Vision metadata', tags: [ 'CustomVision.Metadata.Version' ] }
+                    { name: 'Netron metadata', tags: ['[].name', '[].schema'] },
+                    { name: 'Netron metadata', tags: ['[].name', '[].attributes'] },
+                    { name: 'Netron metadata', tags: ['[].name', '[].category'] },
+                    { name: 'Darkflow metadata', tags: ['net', 'type', 'model'] },
+                    { name: 'keras-yolo2 configuration', tags: ['model', 'train', 'valid'] },
+                    { name: 'Vulkan SwiftShader ICD manifest', tags: ['file_format_version', 'ICD'] },
+                    { name: 'DeepLearningExamples configuration', tags: ['attention_probs_dropout_prob', 'hidden_act', 'hidden_dropout_prob', 'hidden_size', ] },
+                    { name: 'NuGet assets', tags: ['version', 'targets', 'packageFolders'] },
+                    { name: 'NuGet data', tags: ['format', 'restore', 'projects'] },
+                    { name: 'NPM package', tags: ['name', 'version', 'dependencies'] },
+                    { name: 'NetworkX adjacency_data', tags: ['directed', 'graph', 'nodes'] },
+                    { name: 'Waifu2x data', tags: ['name', 'arch_name', 'channels'] },
+                    { name: 'Waifu2x data', tags: ['[].nInputPlane', '[].nOutputPlane', '[].weight', '[].bias'] },
+                    { name: 'Brain.js data', tags: ['type', 'sizes', 'layers'] },
+                    { name: 'Custom Vision metadata', tags: ['CustomVision.Metadata.Version'] }
                 ];
                 const match = (obj, tag) => {
                     if (tag.startsWith('[].')) {
@@ -1687,23 +1683,23 @@ view.ModelFactoryService = class {
         };
         const pbtxt = () => {
             const formats = [
-                { name: 'ImageNet LabelMap data', tags: [ 'entry', 'entry.target_class' ] },
-                { name: 'StringIntLabelMapProto data', tags: [ 'item', 'item.id', 'item.name' ] },
-                { name: 'caffe.LabelMap data', tags: [ 'item', 'item.name', 'item.label' ] },
-                { name: 'Triton Inference Server configuration', tags: [ 'name', 'platform', 'input', 'output' ] },
-                { name: 'TensorFlow OpList data', tags: [ 'op', 'op.name', 'op.input_arg' ] },
-                { name: 'vitis.ai.proto.DpuModelParamList data', tags: [ 'model', 'model.name', 'model.kernel' ] },
-                { name: 'object_detection.protos.DetectionModel data', tags: [ 'model', 'model.ssd' ] },
-                { name: 'object_detection.protos.DetectionModel data', tags: [ 'model', 'model.faster_rcnn' ] },
-                { name: 'tensorflow.CheckpointState data', tags: [ 'model_checkpoint_path', 'all_model_checkpoint_paths' ] },
-                { name: 'apollo.perception.camera.traffic_light.detection.DetectionParam data', tags: [ 'min_crop_size', 'crop_method' ] },
-                { name: 'tidl_meta_arch.TIDLMetaArch data', tags: [ 'caffe_ssd' ] }, // https://github.com/TexasInstruments/edgeai-mmdetection/blob/master/mmdet/utils/proto/mmdet_meta_arch.proto
-                { name: 'tidl_meta_arch.TIDLMetaArch data', tags: [ 'tf_od_api_ssd' ] },
-                { name: 'tidl_meta_arch.TIDLMetaArch data', tags: [ 'tidl_ssd' ] },
-                { name: 'tidl_meta_arch.TIDLMetaArch data', tags: [ 'tidl_faster_rcnn' ] },
-                { name: 'tidl_meta_arch.TIDLMetaArch data', tags: [ 'tidl_yolo' ] },
-                { name: 'tidl_meta_arch.TIDLMetaArch data', tags: [ 'tidl_retinanet' ] },
-                { name: 'domi.InsertNewOps data', tags: [ 'aipp_op' ] } // https://github.com/Ascend/parser/blob/development/parser/proto/insert_op.proto
+                { name: 'ImageNet LabelMap data', tags: ['entry', 'entry.target_class'] },
+                { name: 'StringIntLabelMapProto data', tags: ['item', 'item.id', 'item.name'] },
+                { name: 'caffe.LabelMap data', tags: ['item', 'item.name', 'item.label'] },
+                { name: 'Triton Inference Server configuration', tags: ['name', 'platform', 'input', 'output'] },
+                { name: 'TensorFlow OpList data', tags: ['op', 'op.name', 'op.input_arg'] },
+                { name: 'vitis.ai.proto.DpuModelParamList data', tags: ['model', 'model.name', 'model.kernel'] },
+                { name: 'object_detection.protos.DetectionModel data', tags: ['model', 'model.ssd'] },
+                { name: 'object_detection.protos.DetectionModel data', tags: ['model', 'model.faster_rcnn'] },
+                { name: 'tensorflow.CheckpointState data', tags: ['model_checkpoint_path', 'all_model_checkpoint_paths'] },
+                { name: 'apollo.perception.camera.traffic_light.detection.DetectionParam data', tags: ['min_crop_size', 'crop_method'] },
+                { name: 'tidl_meta_arch.TIDLMetaArch data', tags: ['caffe_ssd'] }, // https://github.com/TexasInstruments/edgeai-mmdetection/blob/master/mmdet/utils/proto/mmdet_meta_arch.proto
+                { name: 'tidl_meta_arch.TIDLMetaArch data', tags: ['tf_od_api_ssd'] },
+                { name: 'tidl_meta_arch.TIDLMetaArch data', tags: ['tidl_ssd'] },
+                { name: 'tidl_meta_arch.TIDLMetaArch data', tags: ['tidl_faster_rcnn'] },
+                { name: 'tidl_meta_arch.TIDLMetaArch data', tags: ['tidl_yolo'] },
+                { name: 'tidl_meta_arch.TIDLMetaArch data', tags: ['tidl_retinanet'] },
+                { name: 'domi.InsertNewOps data', tags: ['aipp_op'] } // https://github.com/Ascend/parser/blob/development/parser/proto/insert_op.proto
             ];
             const tags = context.tags('pbtxt');
             if (tags.size > 0) {
@@ -1722,11 +1718,100 @@ view.ModelFactoryService = class {
         const pb = () => {
             const tags = context.tags('pb+');
             if (Object.keys(tags).length > 0) {
-                const formats = [
-                    { name: 'sentencepiece.ModelProto data', tags: [[1,[[1,2],[2,5],[3,0]]],[2,[[1,2],[2,2],[3,0],[4,0],[5,2],[6,0],[7,2],[10,5],[16,0],[40,0],[41,0],[42,0],[43,0]]],[3,[]],[4,[]],[5,[]]] },
-                    { name: 'mediapipe.BoxDetectorIndex data', tags: [[1,[[1,[[1,[[1,5],[2,5],[3,5],[4,5],[6,0],[7,5],[8,5],[10,5],[11,0],[12,0]]],[2,5],[3,[]]]],[2,false],[3,false],[4,false],[5,false]]],[2,false],[3,false]] },
-                    { name: 'third_party.tensorflow.python.keras.protobuf.SavedMetadata data', tags: [[1,[[1,[[1,0],[2,0]]],[2,0],[3,2],[4,2],[5,2]]]] },
-                    { name: 'pblczero.Net data', tags: [[1,5],[2,2],[3,[[1,0],[2,0],[3,0]],[10,[[1,[]],[2,[]],[3,[]],[4,[]],[5,[]],[6,[]]]],[11,[]]]] } // https://github.com/LeelaChessZero/lczero-common/blob/master/proto/net.proto
+                const formats = [{
+                        name: 'sentencepiece.ModelProto data',
+                        tags: [
+                            [1, [
+                                [1, 2],
+                                [2, 5],
+                                [3, 0]
+                            ]],
+                            [2, [
+                                [1, 2],
+                                [2, 2],
+                                [3, 0],
+                                [4, 0],
+                                [5, 2],
+                                [6, 0],
+                                [7, 2],
+                                [10, 5],
+                                [16, 0],
+                                [40, 0],
+                                [41, 0],
+                                [42, 0],
+                                [43, 0]
+                            ]],
+                            [3, []],
+                            [4, []],
+                            [5, []]
+                        ]
+                    },
+                    {
+                        name: 'mediapipe.BoxDetectorIndex data',
+                        tags: [
+                            [1, [
+                                [1, [
+                                    [1, [
+                                        [1, 5],
+                                        [2, 5],
+                                        [3, 5],
+                                        [4, 5],
+                                        [6, 0],
+                                        [7, 5],
+                                        [8, 5],
+                                        [10, 5],
+                                        [11, 0],
+                                        [12, 0]
+                                    ]],
+                                    [2, 5],
+                                    [3, []]
+                                ]],
+                                [2, false],
+                                [3, false],
+                                [4, false],
+                                [5, false]
+                            ]],
+                            [2, false],
+                            [3, false]
+                        ]
+                    },
+                    {
+                        name: 'third_party.tensorflow.python.keras.protobuf.SavedMetadata data',
+                        tags: [
+                            [1, [
+                                [1, [
+                                    [1, 0],
+                                    [2, 0]
+                                ]],
+                                [2, 0],
+                                [3, 2],
+                                [4, 2],
+                                [5, 2]
+                            ]]
+                        ]
+                    },
+                    {
+                        name: 'pblczero.Net data',
+                        tags: [
+                            [1, 5],
+                            [2, 2],
+                            [3, [
+                                    [1, 0],
+                                    [2, 0],
+                                    [3, 0]
+                                ],
+                                [10, [
+                                    [1, []],
+                                    [2, []],
+                                    [3, []],
+                                    [4, []],
+                                    [5, []],
+                                    [6, []]
+                                ]],
+                                [11, []]
+                            ]
+                        ]
+                    } // https://github.com/LeelaChessZero/lczero-common/blob/master/proto/net.proto
                 ];
                 const match = (tags, schema) => {
                     for (const pair of schema) {
@@ -1743,8 +1828,7 @@ view.ModelFactoryService = class {
                             if (typeof value !== 'object' || !match(value, inner)) {
                                 return false;
                             }
-                        }
-                        else if (inner !== value) {
+                        } else if (inner !== value) {
                             if (inner === 2 && !Array.isArray(value) && Object(value) === (value) && Object.keys(value).length === 0) {
                                 return true;
                             }
@@ -1791,8 +1875,8 @@ view.ModelFactoryService = class {
             const tags = context.tags('xml');
             if (tags.size > 0) {
                 const formats = [
-                    { name: 'OpenCV storage data', tags: [ 'opencv_storage' ] },
-                    { name: 'XHTML markup', tags: [ 'http://www.w3.org/1999/xhtml:html' ]}
+                    { name: 'OpenCV storage data', tags: ['opencv_storage'] },
+                    { name: 'XHTML markup', tags: ['http://www.w3.org/1999/xhtml:html'] }
                 ];
                 for (const format of formats) {
                     if (format.tags.some((tag) => tags.has(tag))) {
@@ -1806,7 +1890,7 @@ view.ModelFactoryService = class {
             stream.seek(0);
             const buffer = stream.peek(Math.min(16, stream.length));
             const bytes = Array.from(buffer).map((c) => (c < 16 ? '0' : '') + c.toString(16)).join('');
-            const content = stream.length > 268435456 ? '(' + bytes + ') [' + stream.length.toString() + ']': '(' + bytes + ')';
+            const content = stream.length > 268435456 ? '(' + bytes + ') [' + stream.length.toString() + ']' : '(' + bytes + ')';
             throw new view.Error("Unsupported file content " + content + " for extension '." + extension + "' in '" + identifier + "'.", !skip());
         };
         json();
@@ -1841,8 +1925,7 @@ view.ModelFactoryService = class {
                         if (!match) {
                             return nextModule();
                         }
-                    }
-                    catch (error) {
+                    } catch (error) {
                         updateErrorContext(error, context);
                         return Promise.reject(error);
                     }
@@ -1858,8 +1941,7 @@ view.ModelFactoryService = class {
                         return nextModule();
                     });
                 });
-            }
-            else {
+            } else {
                 if (success) {
                     if (errors.length === 1) {
                         const error = errors[0];
@@ -1904,14 +1986,12 @@ view.ModelFactoryService = class {
                                     }
                                     return nextModule();
                                 });
-                            }
-                            else {
+                            } else {
                                 return nextEntry();
                             }
                         };
                         return nextModule();
-                    }
-                    else {
+                    } else {
                         if (matches.length === 0) {
                             return Promise.resolve(null);
                         }
@@ -1994,8 +2074,7 @@ view.ModelFactoryService = class {
                 const queue = files.slice(0).filter((entry) => entry.name.substring(folder.length).indexOf('/') >= 0);
                 return filter(queue);
             });
-        }
-        catch (error) {
+        } catch (error) {
             return Promise.reject(new view.ArchiveError(error.message));
         }
     }
