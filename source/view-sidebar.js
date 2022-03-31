@@ -1,4 +1,3 @@
-
 var sidebar = sidebar || {};
 var base = base || require('./base');
 
@@ -47,8 +46,7 @@ sidebar.Sidebar = class {
         }
         if (this._stack.length > 0) {
             this._activate(this._stack[this._stack.length - 1]);
-        }
-        else {
+        } else {
             this._hide();
         }
     }
@@ -103,13 +101,11 @@ sidebar.Sidebar = class {
 
             if (typeof item.content == 'string') {
                 content.innerHTML = item.content;
-            }
-            else if (item.content instanceof Array) {
+            } else if (item.content instanceof Array) {
                 for (const element of item.content) {
                     content.appendChild(element);
                 }
-            }
-            else {
+            } else {
                 content.appendChild(item.content);
             }
             sidebar.style.width = 'min(calc(100% * 0.6), 500px)';
@@ -137,7 +133,7 @@ sidebar.NodeSidebar = class {
             const type = node.type;
             if (type && (type.description || type.inputs || type.outputs || type.attributes)) {
                 showDocumentation = {};
-                showDocumentation.text = type.nodes ? '\u0192': '?';
+                showDocumentation.text = type.nodes ? '\u0192' : '?';
                 showDocumentation.callback = () => {
                     this._raise('show-documentation', null);
                 };
@@ -328,7 +324,7 @@ sidebar.NodeSidebar = class {
             if (ellipsis) {
                 array.push('\u2026');
             }
-            return quote ? [ '[', array.join(', '), ']' ].join(' ') : array.join(', ');
+            return quote ? ['[', array.join(', '), ']'].join(' ') : array.join(', ');
         }
         if (value === null) {
             return quote ? 'null' : '';
@@ -343,8 +339,7 @@ sidebar.NodeSidebar = class {
         const keys = Object.keys(value).filter((key) => !key.startsWith('__') && !key.endsWith('__'));
         if (keys.length == 1) {
             list.push(sidebar.NodeSidebar.formatAttributeValue(value[Object.keys(value)[0]], null, true));
-        }
-        else {
+        } else {
             for (const key of keys) {
                 list.push(key + ': ' + sidebar.NodeSidebar.formatAttributeValue(value[key], null, true));
             }
@@ -354,7 +349,7 @@ sidebar.NodeSidebar = class {
             objectType = value.constructor.name;
         }
         if (objectType) {
-            return objectType + (list.length == 0 ? '()' : [ '(', list.join(', '), ')' ].join(''));
+            return objectType + (list.length == 0 ? '()' : ['(', list.join(', '), ')'].join(''));
         }
         switch (list.length) {
             case 0:
@@ -362,7 +357,7 @@ sidebar.NodeSidebar = class {
             case 1:
                 return list[0];
             default:
-                return quote ? [ '(', list.join(', '), ')' ].join(' ') : list.join(', ');
+                return quote ? ['(', list.join(', '), ')'].join(' ') : list.join(', ');
         }
     }
 };
@@ -472,7 +467,7 @@ sidebar.ValueTextView = class {
             element.appendChild(this._action);
         }
 
-        const list = Array.isArray(value) ? value : [ value ];
+        const list = Array.isArray(value) ? value : [value];
         let className = 'sidebar-view-item-value-line';
         for (const item of list) {
             const line = this._host.document.createElement('div');
@@ -487,8 +482,7 @@ sidebar.ValueTextView = class {
         return this._elements;
     }
 
-    toggle() {
-    }
+    toggle() {}
 };
 
 class NodeAttributeView {
@@ -512,34 +506,36 @@ class NodeAttributeView {
         const value = this._attribute.value;
         switch (type) {
             case 'graph':
-            case 'function': {
-                const line = this._host.document.createElement('div');
-                line.className = 'sidebar-view-item-value-line-link';
-                line.innerHTML = value.name;
-                line.addEventListener('click', () => {
-                    this._raise('show-graph', value);
-                });
-                this._element.appendChild(line);
-                break;
-            }
-            default: {
-                let content = sidebar.NodeSidebar.formatAttributeValue(value, type);
-                if (content && content.length > 1000) {
-                    content = content.substring(0, 1000) + '\u2026';
+            case 'function':
+                {
+                    const line = this._host.document.createElement('div');
+                    line.className = 'sidebar-view-item-value-line-link';
+                    line.innerHTML = value.name;
+                    line.addEventListener('click', () => {
+                        this._raise('show-graph', value);
+                    });
+                    this._element.appendChild(line);
+                    break;
                 }
-                if (content && typeof content === 'string') {
-                    content = content.split('<').join('&lt;').split('>').join('&gt;');
+            default:
+                {
+                    let content = sidebar.NodeSidebar.formatAttributeValue(value, type);
+                    if (content && content.length > 1000) {
+                        content = content.substring(0, 1000) + '\u2026';
+                    }
+                    if (content && typeof content === 'string') {
+                        content = content.split('<').join('&lt;').split('>').join('&gt;');
+                    }
+                    const line = this._host.document.createElement('div');
+                    line.className = 'sidebar-view-item-value-line';
+                    line.innerHTML = content ? content : '&nbsp;';
+                    this._element.appendChild(line);
                 }
-                const line = this._host.document.createElement('div');
-                line.className = 'sidebar-view-item-value-line';
-                line.innerHTML = content ? content : '&nbsp;';
-                this._element.appendChild(line);
-            }
         }
     }
 
     render() {
-        return [ this._element ];
+        return [this._element];
     }
 
     toggle() {
@@ -553,8 +549,7 @@ class NodeAttributeView {
             if (type == 'tensor' && value && value.type) {
                 typeLine.innerHTML = 'type: ' + '<code><b>' + value.type.toString() + '</b></code>';
                 this._element.appendChild(typeLine);
-            }
-            else {
+            } else {
                 typeLine.innerHTML = 'type: ' + '<code><b>' + this._attribute.type + '</b></code>';
                 this._element.appendChild(typeLine);
             }
@@ -576,8 +571,7 @@ class NodeAttributeView {
                 valueLine.appendChild(contentLine);
                 this._element.appendChild(valueLine);
             }
-        }
-        else {
+        } else {
             this._expander.innerText = '+';
             while (this._element.childElementCount > 2) {
                 this._element.removeChild(this._element.lastChild);
@@ -685,14 +679,12 @@ sidebar.ArgumentView = class {
             name = name || ' ';
             nameLine.innerHTML = '<span class=\'sidebar-view-item-value-line-content\'>name: <b>' + name + '</b></span>';
             this._element.appendChild(nameLine);
-        }
-        else if (this._hasKind) {
+        } else if (this._hasKind) {
             const kindLine = this._host.document.createElement('div');
             kindLine.className = 'sidebar-view-item-value-line';
             kindLine.innerHTML = 'kind: <b>' + initializer.kind + '</b>';
             this._element.appendChild(kindLine);
-        }
-        else if (type) {
+        } else if (type) {
             const typeLine = this._host.document.createElement('div');
             typeLine.className = 'sidebar-view-item-value-line-border';
             typeLine.innerHTML = 'type: <code><b>' + type.toString().split('<').join('&lt;').split('>').join('&gt;') + '</b></code>';
@@ -719,7 +711,8 @@ sidebar.ArgumentView = class {
                 let type = null;
                 let denotation = null;
                 if (this._argument.type) {
-                    type = this._argument.type.toString();
+                    type = this._argument.type
+                    type = type.string ? type.string : type.toString();
                     denotation = this._argument.type.denotation || null;
                 }
                 if (type && (this._hasId || this._hasKind)) {
@@ -759,14 +752,14 @@ sidebar.ArgumentView = class {
                     this._element.appendChild(location);
                 }
 
-                if (initializer) {
+                if (initializer && initializer.toString() != '[object Object]') {
                     const contentLine = this._host.document.createElement('pre');
                     const valueLine = this._host.document.createElement('div');
                     try {
                         const state = initializer.state;
                         if (state === null && this._host.save &&
                             initializer.type.dataType && initializer.type.dataType != '?' &&
-                            initializer.type.shape && initializer.type.shape.dimensions /*&& initializer.type.shape.dimensions.length > 0*/) {
+                            initializer.type.shape && initializer.type.shape.dimensions /*&& initializer.type.shape.dimensions.length > 0*/ ) {
                             this._saveButton = this._host.document.createElement('div');
                             this._saveButton.className = 'sidebar-view-item-value-expander';
                             this._saveButton.innerHTML = '&#x1F4BE;';
@@ -778,16 +771,14 @@ sidebar.ArgumentView = class {
 
                         valueLine.className = 'sidebar-view-item-value-line-border';
                         contentLine.innerHTML = state || initializer.toString();
-                    }
-                    catch (err) {
+                    } catch (err) {
                         contentLine.innerHTML = err.toString();
                         this._raise('error', err);
                     }
                     valueLine.appendChild(contentLine);
                     this._element.appendChild(valueLine);
                 }
-            }
-            else {
+            } else {
                 this._expander.innerText = '+';
                 while (this._element.childElementCount > 2) {
                     this._element.removeChild(this._element.lastChild);
@@ -1037,7 +1028,7 @@ sidebar.DocumentationSidebar = class {
                 });
             }
 
-            this._elements = [ element ];
+            this._elements = [element];
 
             const separator = this._host.document.createElement('div');
             separator.className = 'sidebar-view-separator';
@@ -1350,12 +1341,11 @@ sidebar.FindSidebar = class {
         const unquote = searchText.match(new RegExp(/^'(.*)'|"(.*)"$/));
         if (unquote) {
             const term = unquote[1] || unquote[2];
-            terms = [ term ];
+            terms = [term];
             callback = (name) => {
                 return term == name;
             };
-        }
-        else {
+        } else {
             terms = searchText.trim().toLowerCase().split(' ').map((term) => term.trim()).filter((term) => term.length > 0);
             callback = (name) => {
                 return terms.every((term) => name.toLowerCase().indexOf(term) !== -1);
@@ -1404,8 +1394,7 @@ sidebar.FindSidebar = class {
                                     inputItem.id = 'edge-' + argument.name;
                                     this._resultElement.appendChild(inputItem);
                                     edges.add(argument.name);
-                                }
-                                else {
+                                } else {
                                     initializers.push(argument);
                                 }
                             }
@@ -1501,7 +1490,7 @@ markdown.Generator = class {
         this._emMiddleRegExp = /^\*(?:(?:(?!__[^_]*?__|\*\*\[^\*\]*?\*\*)(?:[^*]|\\\*)|__[^_]*?__|\*\*\[^\*\]*?\*\*)|\*(?:(?!__[^_]*?__|\*\*\[^\*\]*?\*\*)(?:[^*]|\\\*)|__[^_]*?__|\*\*\[^\*\]*?\*\*)*?\*)+?\*$|^_(?![_\s])(?:(?:(?!__[^_]*?__|\*\*\[^\*\]*?\*\*)(?:[^_]|\\_)|__[^_]*?__|\*\*\[^\*\]*?\*\*)|_(?:(?!__[^_]*?__|\*\*\[^\*\]*?\*\*)(?:[^_]|\\_)|__[^_]*?__|\*\*\[^\*\]*?\*\*)*?_)+?_$/;
         this._emEndAstRegExp = /[^!"#$%&'()+\-.,/:;<=>?@[\]`{|}~\s]\*(?!\*)|[!"#$%&'()+\-.,/:;<=>?@[\]`{|}~]\*(?!\*)(?:(?=[!"#$%&'()+\-.,/:;<=>?@[\]`{|}~_\s]|$))/g;
         this._emEndUndRegExp = /[^\s]_(?!_)(?:(?=[!"#$%&'()+\-.,/:;<=>?@[\]`{|}~*\s])|$)/g,
-        this._codespanRegExp = /^(`+)([^`]|[^`][\s\S]*?[^`])\1(?!`)/;
+            this._codespanRegExp = /^(`+)([^`]|[^`][\s\S]*?[^`])\1(?!`)/;
         this._brRegExp = /^( {2,}|\\)\n(?!\s*$)/;
         this._delRegExp = /^~+(?=\S)([\s\S]*?\S)~+/;
         this._textspanRegExp = /^(`+|[^`])(?:(?= {2,}\n)|[\s\S]*?(?:(?=[\\<![`*~]|\b_|https?:\/\/|ftp:\/\/|www\.|$)|[^ ](?= {2,}\n)|[^a-zA-Z0-9.!#$%&'*+/=?_`{|}~-](?=[a-zA-Z0-9.!#$%&'*+/=?_`{|}~-]+@))|(?=[a-zA-Z0-9.!#$%&'*+/=?_`{|}~-]+@))/;
@@ -1541,8 +1530,7 @@ markdown.Generator = class {
                 const lastToken = tokens[tokens.length - 1];
                 if (lastToken && lastToken.type === 'paragraph') {
                     lastToken.text += '\n' + match[0].trimRight();
-                }
-                else {
+                } else {
                     const text = match[0].replace(/^ {4}/gm, '').replace(/\n*$/, '');
                     tokens.push({ type: 'code', text: text });
                 }
@@ -1580,14 +1568,11 @@ markdown.Generator = class {
                     for (let i = 0; i < token.align.length; i++) {
                         if (/^ *-+: *$/.test(token.align[i])) {
                             token.align[i] = 'right';
-                        }
-                        else if (/^ *:-+: *$/.test(token.align[i])) {
+                        } else if (/^ *:-+: *$/.test(token.align[i])) {
                             token.align[i] = 'center';
-                        }
-                        else if (/^ *:-+ *$/.test(token.align[i])) {
+                        } else if (/^ *:-+ *$/.test(token.align[i])) {
                             token.align[i] = 'left';
-                        }
-                        else {
+                        } else {
                             token.align[i] = null;
                         }
                     }
@@ -1690,14 +1675,11 @@ markdown.Generator = class {
                     for (let i = 0; i < token.align.length; i++) {
                         if (/^ *-+: *$/.test(token.align[i])) {
                             token.align[i] = 'right';
-                        }
-                        else if (/^ *:-+: *$/.test(token.align[i])) {
+                        } else if (/^ *:-+: *$/.test(token.align[i])) {
                             token.align[i] = 'center';
-                        }
-                        else if (/^ *:-+ *$/.test(token.align[i])) {
+                        } else if (/^ *:-+ *$/.test(token.align[i])) {
                             token.align[i] = 'left';
-                        }
-                        else {
+                        } else {
                             token.align[i] = null;
                         }
                     }
@@ -1727,8 +1709,7 @@ markdown.Generator = class {
                 const lastToken = tokens[tokens.length - 1];
                 if (lastToken && lastToken.type === 'text') {
                     lastToken.text += '\n' + match[0];
-                }
-                else {
+                } else {
                     tokens.push({ type: 'text', text: match[0] });
                 }
                 continue;
@@ -1773,14 +1754,12 @@ markdown.Generator = class {
                 source = source.substring(match[0].length);
                 if (!inLink && /^<a /i.test(match[0])) {
                     inLink = true;
-                }
-                else if (inLink && /^<\/a>/i.test(match[0])) {
+                } else if (inLink && /^<\/a>/i.test(match[0])) {
                     inLink = false;
                 }
                 if (!inRawBlock && /^<(pre|code|kbd|script)(\s|>)/i.test(match[0])) {
                     inRawBlock = true;
-                }
-                else if (inRawBlock && /^<\/(pre|code|kbd|script)(\s|>)/i.test(match[0])) {
+                } else if (inRawBlock && /^<\/(pre|code|kbd|script)(\s|>)/i.test(match[0])) {
                     inRawBlock = false;
                 }
                 tokens.push({ type: 'html', raw: match[0], text: match[0] });
@@ -1834,8 +1813,7 @@ markdown.Generator = class {
                     const text = match[0].charAt(0);
                     source = source.substring(text.length);
                     tokens.push({ type: 'text', text: text });
-                }
-                else {
+                } else {
                     source = source.substring(match[0].length);
                     const token = this._outputLink(match, link);
                     if (token.type === 'link') {
@@ -1911,7 +1889,7 @@ markdown.Generator = class {
                 source = source.substring(match[0].length);
                 const text = this._escape(match[1]);
                 const href = match[2] === '@' ? 'mailto:' + text : text;
-                tokens.push({ type: 'link', text: text, href: href, tokens: [ { type: 'text', raw: text, text } ] });
+                tokens.push({ type: 'link', text: text, href: href, tokens: [{ type: 'text', raw: text, text }] });
                 continue;
             }
             if (!inLink) {
@@ -1928,7 +1906,7 @@ markdown.Generator = class {
                     const text = this._escape(match[0]);
                     const href = email ? ('mailto:' + text) : (match[1] === 'www.' ? 'http://' + text : text);
                     source = source.substring(match[0].length);
-                    tokens.push({ type: 'link', text: text, href: href, tokens: [ { type: 'text', text: text } ] });
+                    tokens.push({ type: 'link', text: text, href: href, tokens: [{ type: 'text', text: text }] });
                     continue;
                 }
             }
@@ -1936,7 +1914,7 @@ markdown.Generator = class {
             if (match) {
                 source = source.substring(match[0].length);
                 prevChar = match[0].slice(-1);
-                tokens.push({ type: 'text' , text: inRawBlock ? match[0] : this._escape(match[0]) });
+                tokens.push({ type: 'text', text: inRawBlock ? match[0] : this._escape(match[0]) });
                 continue;
             }
             throw new Error("Unexpected '" + source.charCodeAt(0) + "'.");
@@ -1949,26 +1927,30 @@ markdown.Generator = class {
             switch (token.type) {
                 case 'paragraph':
                 case 'text':
-                case 'heading': {
-                    token.tokens  = this._tokenizeInline(token.text, links, false, false, '');
-                    break;
-                }
-                case 'table': {
-                    token.tokens = {};
-                    token.tokens.header = token.header.map((header) => this._tokenizeInline(header, links, false, false, ''));
-                    token.tokens.cells = token.cells.map((cell) => cell.map((row) => this._tokenizeInline(row, links, false, false, '')));
-                    break;
-                }
-                case 'blockquote': {
-                    this._tokenizeBlock(token.tokens, links);
-                    break;
-                }
-                case 'list': {
-                    for (const item of token.items) {
-                        this._tokenizeBlock(item.tokens, links);
+                case 'heading':
+                    {
+                        token.tokens = this._tokenizeInline(token.text, links, false, false, '');
+                        break;
                     }
-                    break;
-                }
+                case 'table':
+                    {
+                        token.tokens = {};
+                        token.tokens.header = token.header.map((header) => this._tokenizeInline(header, links, false, false, ''));
+                        token.tokens.cells = token.cells.map((cell) => cell.map((row) => this._tokenizeInline(row, links, false, false, '')));
+                        break;
+                    }
+                case 'blockquote':
+                    {
+                        this._tokenizeBlock(token.tokens, links);
+                        break;
+                    }
+                case 'list':
+                    {
+                        for (const item of token.items) {
+                            this._tokenizeBlock(item.tokens, links);
+                        }
+                        break;
+                    }
             }
         }
     }
@@ -1978,104 +1960,113 @@ markdown.Generator = class {
         while (tokens.length > 0) {
             const token = tokens.shift();
             switch (token.type) {
-                case 'space': {
-                    continue;
-                }
-                case 'hr': {
-                    html += '<hr>\n';
-                    continue;
-                }
-                case 'heading': {
-                    const level = token.depth;
-                    const id = this._slug(slugs, this._renderInline(token.tokens, true));
-                    html += '<h' + level + ' id="' + id + '">' + this._renderInline(token.tokens) + '</h' + level + '>\n';
-                    continue;
-                }
-                case 'code': {
-                    const code = token.text;
-                    const language = (token.language || '').match(/\S*/)[0];
-                    html += '<pre><code' + (language ? ' class="' + 'language-' + this._encode(language) + '"' : '') + '>' + (token.escaped ? code : this._encode(code)) + '</code></pre>\n';
-                    continue;
-                }
-                case 'table': {
-                    let header = '';
-                    let cell = '';
-                    for (let j = 0; j < token.header.length; j++) {
-                        const content = this._renderInline(token.tokens.header[j]);
-                        const align = token.align[j];
-                        cell += '<th' + (align ? ' align="' + align + '"' : '') + '>' + content + '</th>\n';
+                case 'space':
+                    {
+                        continue;
                     }
-                    header += '<tr>\n' + cell + '</tr>\n';
-                    let body = '';
-                    for (let j = 0; j < token.cells.length; j++) {
-                        const row = token.tokens.cells[j];
-                        cell = '';
-                        for (let k = 0; k < row.length; k++) {
-                            const content = this._renderInline(row[k]);
-                            const align = token.align[k];
-                            cell += '<td' + (align ? ' align="' + align + '"' : '') + '>' + content + '</td>\n';
+                case 'hr':
+                    {
+                        html += '<hr>\n';
+                        continue;
+                    }
+                case 'heading':
+                    {
+                        const level = token.depth;
+                        const id = this._slug(slugs, this._renderInline(token.tokens, true));
+                        html += '<h' + level + ' id="' + id + '">' + this._renderInline(token.tokens) + '</h' + level + '>\n';
+                        continue;
+                    }
+                case 'code':
+                    {
+                        const code = token.text;
+                        const language = (token.language || '').match(/\S*/)[0];
+                        html += '<pre><code' + (language ? ' class="' + 'language-' + this._encode(language) + '"' : '') + '>' + (token.escaped ? code : this._encode(code)) + '</code></pre>\n';
+                        continue;
+                    }
+                case 'table':
+                    {
+                        let header = '';
+                        let cell = '';
+                        for (let j = 0; j < token.header.length; j++) {
+                            const content = this._renderInline(token.tokens.header[j]);
+                            const align = token.align[j];
+                            cell += '<th' + (align ? ' align="' + align + '"' : '') + '>' + content + '</th>\n';
                         }
-                        body += '<tr>\n' + cell + '</tr>\n';
+                        header += '<tr>\n' + cell + '</tr>\n';
+                        let body = '';
+                        for (let j = 0; j < token.cells.length; j++) {
+                            const row = token.tokens.cells[j];
+                            cell = '';
+                            for (let k = 0; k < row.length; k++) {
+                                const content = this._renderInline(row[k]);
+                                const align = token.align[k];
+                                cell += '<td' + (align ? ' align="' + align + '"' : '') + '>' + content + '</td>\n';
+                            }
+                            body += '<tr>\n' + cell + '</tr>\n';
+                        }
+                        html += '<table>\n<thead>\n' + header + '</thead>\n' + (body ? '<tbody>' + body + '</tbody>' : body) + '</table>\n';
+                        continue;
                     }
-                    html += '<table>\n<thead>\n' + header + '</thead>\n' + (body ? '<tbody>' + body + '</tbody>' : body) + '</table>\n';
-                    continue;
-                }
-                case 'blockquote': {
-                    html += '<blockquote>\n' + this._render(token.tokens, slugs, true) + '</blockquote>\n';
-                    continue;
-                }
-                case 'list': {
-                    const ordered = token.ordered;
-                    const start = token.start;
-                    const loose = token.loose;
-                    let body = '';
-                    for (const item of token.items) {
-                        let itemBody = '';
-                        if (item.task) {
-                            const checkbox = '<input ' + (item.checked ? 'checked="" ' : '') + 'disabled="" type="checkbox"' + '> ';
-                            if (loose) {
-                                if (item.tokens.length > 0 && item.tokens[0].type === 'text') {
-                                    item.tokens[0].text = checkbox + ' ' + item.tokens[0].text;
-                                    if (item.tokens[0].tokens && item.tokens[0].tokens.length > 0 && item.tokens[0].tokens[0].type === 'text') {
-                                        item.tokens[0].tokens[0].text = checkbox + ' ' + item.tokens[0].tokens[0].text;
+                case 'blockquote':
+                    {
+                        html += '<blockquote>\n' + this._render(token.tokens, slugs, true) + '</blockquote>\n';
+                        continue;
+                    }
+                case 'list':
+                    {
+                        const ordered = token.ordered;
+                        const start = token.start;
+                        const loose = token.loose;
+                        let body = '';
+                        for (const item of token.items) {
+                            let itemBody = '';
+                            if (item.task) {
+                                const checkbox = '<input ' + (item.checked ? 'checked="" ' : '') + 'disabled="" type="checkbox"' + '> ';
+                                if (loose) {
+                                    if (item.tokens.length > 0 && item.tokens[0].type === 'text') {
+                                        item.tokens[0].text = checkbox + ' ' + item.tokens[0].text;
+                                        if (item.tokens[0].tokens && item.tokens[0].tokens.length > 0 && item.tokens[0].tokens[0].type === 'text') {
+                                            item.tokens[0].tokens[0].text = checkbox + ' ' + item.tokens[0].tokens[0].text;
+                                        }
+                                    } else {
+                                        item.tokens.unshift({ type: 'text', text: checkbox });
                                     }
-                                }
-                                else {
-                                    item.tokens.unshift({ type: 'text', text: checkbox });
+                                } else {
+                                    itemBody += checkbox;
                                 }
                             }
-                            else {
-                                itemBody += checkbox;
-                            }
+                            itemBody += this._render(item.tokens, slugs, loose);
+                            body += '<li>' + itemBody + '</li>\n';
                         }
-                        itemBody += this._render(item.tokens, slugs, loose);
-                        body += '<li>' + itemBody + '</li>\n';
+                        const type = (ordered ? 'ol' : 'ul');
+                        html += '<' + type + (ordered && start !== 1 ? (' start="' + start + '"') : '') + '>\n' + body + '</' + type + '>\n';
+                        continue;
                     }
-                    const type = (ordered ? 'ol' : 'ul');
-                    html += '<' + type + (ordered && start !== 1 ? (' start="' + start + '"') : '') + '>\n' + body + '</' + type + '>\n';
-                    continue;
-                }
-                case 'html': {
-                    html += token.text;
-                    continue;
-                }
-                case 'paragraph': {
-                    html += '<p>' + this._renderInline(token.tokens) + '</p>\n';
-                    continue;
-                }
-                case 'text': {
-                    html += top ? '<p>' : '';
-                    html += token.tokens ? this._renderInline(token.tokens) : token.text;
-                    while (tokens.length > 0 && tokens[0].type === 'text') {
-                        const token = tokens.shift();
-                        html += '\n' + (token.tokens ? this._renderInline(token.tokens) : token.text);
+                case 'html':
+                    {
+                        html += token.text;
+                        continue;
                     }
-                    html += top ? '</p>\n' : '';
-                    continue;
-                }
-                default: {
-                    throw new Error("Unexpected token type '" + token.type + "'.");
-                }
+                case 'paragraph':
+                    {
+                        html += '<p>' + this._renderInline(token.tokens) + '</p>\n';
+                        continue;
+                    }
+                case 'text':
+                    {
+                        html += top ? '<p>' : '';
+                        html += token.tokens ? this._renderInline(token.tokens) : token.text;
+                        while (tokens.length > 0 && tokens[0].type === 'text') {
+                            const token = tokens.shift();
+                            html += '\n' + (token.tokens ? this._renderInline(token.tokens) : token.text);
+                        }
+                        html += top ? '</p>\n' : '';
+                        continue;
+                    }
+                default:
+                    {
+                        throw new Error("Unexpected token type '" + token.type + "'.");
+                    }
             }
         }
         return html;
@@ -2087,45 +2078,54 @@ markdown.Generator = class {
             switch (token.type) {
                 case 'escape':
                 case 'html':
-                case 'text': {
-                    html += token.text;
-                    break;
-                }
-                case 'link': {
-                    const text = this._renderInline(token.tokens, slug);
-                    html += slug ? text : '<a href="' + token.href + '"' + (token.title ? ' title="' + token.title + '"' : '') + ' target="_blank">' + text + '</a>';
-                    break;
-                }
-                case 'image': {
-                    html += slug ? token.text : '<img src="' + token.href + '" alt="' + token.text + '"' + (token.title ? ' title="' + token.title + '"' : '') + '>';
-                    break;
-                }
-                case 'strong': {
-                    const text = this._renderInline(token.tokens, slug);
-                    html += slug ? text : '<strong>' + text + '</strong>';
-                    break;
-                }
-                case 'em': {
-                    const text = this._renderInline(token.tokens, slug);
-                    html += slug ? text : '<em>' + text + '</em>';
-                    break;
-                }
-                case 'codespan': {
-                    html += slug ? token.text : '<code>' + token.text + '</code>';
-                    break;
-                }
-                case 'br': {
-                    html += slug ? '' : '<br>';
-                    break;
-                }
-                case 'del': {
-                    const text = this._renderInline(token.tokens, slug);
-                    html += slug ? text : '<del>' + text + '</del>';
-                    break;
-                }
-                default: {
-                    throw new Error("Unexpected token type '" + token.type + "'.");
-                }
+                case 'text':
+                    {
+                        html += token.text;
+                        break;
+                    }
+                case 'link':
+                    {
+                        const text = this._renderInline(token.tokens, slug);
+                        html += slug ? text : '<a href="' + token.href + '"' + (token.title ? ' title="' + token.title + '"' : '') + ' target="_blank">' + text + '</a>';
+                        break;
+                    }
+                case 'image':
+                    {
+                        html += slug ? token.text : '<img src="' + token.href + '" alt="' + token.text + '"' + (token.title ? ' title="' + token.title + '"' : '') + '>';
+                        break;
+                    }
+                case 'strong':
+                    {
+                        const text = this._renderInline(token.tokens, slug);
+                        html += slug ? text : '<strong>' + text + '</strong>';
+                        break;
+                    }
+                case 'em':
+                    {
+                        const text = this._renderInline(token.tokens, slug);
+                        html += slug ? text : '<em>' + text + '</em>';
+                        break;
+                    }
+                case 'codespan':
+                    {
+                        html += slug ? token.text : '<code>' + token.text + '</code>';
+                        break;
+                    }
+                case 'br':
+                    {
+                        html += slug ? '' : '<br>';
+                        break;
+                    }
+                case 'del':
+                    {
+                        const text = this._renderInline(token.tokens, slug);
+                        html += slug ? text : '<del>' + text + '</del>';
+                        break;
+                    }
+                default:
+                    {
+                        throw new Error("Unexpected token type '" + token.type + "'.");
+                    }
             }
         }
         return html;
@@ -2134,9 +2134,7 @@ markdown.Generator = class {
     _outputLink(match, href, title) {
         title = title ? this._escape(title) : null;
         const text = match[1].replace(/\\([[\]])/g, '$1');
-        return match[0].charAt(0) !== '!' ?
-            { type: 'link', href: href, title: title, text: text } :
-            { type: 'image', href: href, title: title, text: this._escape(text) };
+        return match[0].charAt(0) !== '!' ? { type: 'link', href: href, title: title, text: text } : { type: 'image', href: href, title: title, text: this._escape(text) };
     }
 
     _splitCells(tableRow, count) {
@@ -2151,8 +2149,7 @@ markdown.Generator = class {
         const cells = row.split(/ \|/);
         if (cells.length > count) {
             cells.splice(count);
-        }
-        else {
+        } else {
             while (cells.length < count) {
                 cells.push('');
             }

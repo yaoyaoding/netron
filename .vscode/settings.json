@@ -3,5 +3,11 @@
         "dist": true,
         "node_modules": true,
         "third_party": true
-    }
+    },
+    "cSpell.words": [
+        "hidet",
+        "mxnet",
+        "ndarray",
+        "netron"
+    ]
 }
