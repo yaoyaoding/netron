@@ -1050,7 +1050,11 @@ view.Node = class extends grapher.Node {
                     shape = '\u3008' + type.shape.dimensions.map((d) => d ? d : '?').join('\u00D7') + '\u3009';
                     if (type.shape.dimensions.length === 0 && argument.initializer && !argument.initializer.state) {
                         try {
-                            shape = argument.initializer.toString();
+                            if (argument.initializer.value) {
+                                shape = argument.initializer.value
+                            } else {
+                                shape = argument.initializer.toString();
+                            }
                             if (shape && shape.length > 10) {
                                 shape = shape.substring(0, 10) + '\u2026';
                             }
